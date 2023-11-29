@@ -1,71 +1,101 @@
 import 'package:employee/cubit/todo_cubit.dart';
+import 'package:employee/custom_widgets/add_delete_item.dart';
 import 'package:employee/custom_widgets/customContainer1.dart';
 import 'package:employee/custom_widgets/customContainer2.dart';
 import 'package:flutter/material.dart';
 
-
-
-Widget   TaskItems(Map model, context) => Padding(
-  padding: EdgeInsets.all(20),
-  child:
-  Container(
-    decoration: BoxDecoration(
-
-        border: Border.all(width:3 , color: Colors.red)),
-
-    child: Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Row(
+Widget TaskItems(
+  Map model,
+  context,
+) =>
+    Padding(
+      padding: EdgeInsets.all(20),
+      child: Container(
+        decoration:
+            BoxDecoration(border: Border.all(width: 3, color: Colors.red)),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Expanded(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children:  [
-                  CustomContainer1(text2:  '${model['name']}', text1: 'name'),
-                  CustomContainer2(text2:  '${model['title']}', text1: 'age'),
-                  CustomContainer1(text2: '${model['date']}' , text1: 'position'),
-                  CustomContainer2(text2: '${model['time']}', text1: 'years of Expereince'),
-           /*       CustomContainer1(text2: 'fouda', text1: 'years of Expereince'),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      CustomContainer1(
+                          text2: '${model['name']}', text1: 'name'),
+                      CustomContainer2(
+                          text2: '${model['title']}', text1: 'age'),
+                      CustomContainer1(
+                          text2: '${model['date']}', text1: 'position'),
+                      CustomContainer2(
+                          text2: '${model['time']}',
+                          text1: 'years of Expereince'),
+                      /*       CustomContainer1(text2: 'fouda', text1: 'years of Expereince'),
                   CustomContainer2(text2: 'fouda', text1: 'number'),*/
-                ],
-              ),
+                    ],
+                  ),
+                ),
+                AppCubit.get(context).currentIndex == 0
+                    ? Center(
+                      child: IconButton(
+                          onPressed: () {
+                            AppCubit.get(context)
+                                .updateData(status: 'done', id: model['id']);
+                          },
+                          icon: Icon(
+                            Icons.add,
+                            size: 50,
+                          )),
+                    )
+                    : addAndDeleteItem(
+                        context,
+                        model,
+                        GestureDetector(
+                            onTap: () {
+                              AppCubit.get(context).currentIndex == 2
+                                  ? AppCubit.get(context).updateData(
+                                      status: 'done', id: model['id'])
+                                  : AppCubit.get(context).updateData(
+                                      status: 'archive', id: model['id']);
+                            },
+                            child: AppCubit.get(context).currentIndex == 1
+                                ? Icon(
+                                    Icons.delete,
+                                    size: 50,
+                                  )
+                                : Icon(
+                                    Icons.reset_tv_rounded,
+                                    size: 50,
+                                  )),
+                        AppCubit.get(context).currentIndex == 2
+                            ? GestureDetector(
+                                onTap: () {
+                                  AppCubit.get(context).currentIndex == 1
+                                      ? AppCubit.get(context).updateData(
+                                          status: 'archive', id: model['id'])
+                                      : AppCubit.get(context)
+                                          .deleteData(id: model['id']);
+                                  ;
+                                },
+                                child: AppCubit.get(context).currentIndex == 1
+                                    ? const Icon(
+                                        Icons.delete,
+                                        size: 50,
+                                      )
+                                    : const Icon(
+                                        Icons.delete_forever_outlined,
+                                        size: 50,
+                                      ))
+                            : Container())
+              ],
             ),
-            Padding(
-              padding: const EdgeInsets.only(right: 15.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                // mainAxisSize: MainAxisSize.max,
-                children: [
-                  IconButton(
-                      onPressed: () {
-                        AppCubit.get(context)
-                            .updateData(status: 'done', id: model['id']);
-                      },
-                      icon: Icon(
-                        Icons.add,
-                        size: 50,
-                      )),
-                  IconButton(
-                      onPressed: () {
-                        AppCubit.get(context)
-                            .updateData(status: 'archive', id: model['id']);
-                      },
-                      icon: Icon(
-                        Icons.delete,
-                        size: 50,
-                      )),
-                ],
-              ),
-            )
+            // Spacer(flex: 1,)
           ],
         ),
-        // Spacer(flex: 1,)
-      ],
-    ),
-  ),
-
+      ),
 
 /*
   Row(
@@ -122,8 +152,7 @@ Widget   TaskItems(Map model, context) => Padding(
     ],
   ),
 */
-);
-
+    );
 
 /*Widget TaskItems(Map model, context) => Dismissible(
   key: Key(model['id'].toString()),
